@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/format.css">
+
+    <style>
+        /* Set up the layout to keep footer at the bottom */
+        body, html {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            /* background: url('/Images/honey.png') no-repeat center center fixed; */
+            background-size: cover;
+        }
+        main {
+            flex: 1;
+        }
+        footer {
+            position: sticky;
+            bottom: 0;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- Wallpaper -->
+
+
+<!-- Header -->
+<header class="bg-warning text-white bold">
+    <h3>Honeypot</h3>
+    <h3>Studio</h3> 
+    <!--Navigation bar-->
+    <nav class="navigation text-white bold py-3">
+        <a href="index.html">Home</a>
+        <a href="configuration.html">Configure</a>
+        <a href="manage_hp.html">Management</a>
+        <a href="credits.html">Credits</a>
+    </nav>
+</header>
+
+<!-- Main Content with Table -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Manage Your Honeypots</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Honeypot Name</th>
+                <th scope="col">Location</th>
+                <th scope="col">Website</th>
+                <th scope="col">Chosen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Example Honeypot 1</td>
+                <td>Location 1</td>
+                <td><a href="https://example.com" target="_blank">example.com</a></td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Example Honeypot 2</td>
+                <td>Location 2</td>
+                <td><a href="https://example2.com" target="_blank">example2.com</a></td>
+                <td>No</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+</div>
+
+<button type="button" class="btn btn-warning"="text-center">Add New </button>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+</html>
