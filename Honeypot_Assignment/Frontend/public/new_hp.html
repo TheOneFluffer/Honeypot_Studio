@@ -9,6 +9,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- External CSS -->
     <link rel="stylesheet" href="../public/css/format.css">
+    <!-- Include Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
         /* Set up the layout to keep footer at the bottom */
@@ -21,6 +23,7 @@
             margin: 0;
             /* background: url('../Images/honey.png') no-repeat center center fixed; */
             background-size: cover;
+            background-color: #e1f16b;
         }
         
         main {
@@ -47,7 +50,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" id="createDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Create </a>
                         <div class="dropdown-menu" aria-labelledby="createDropdown">
-                            <a class="dropdown-item" href="new.html">New</a>
+                            <a class="dropdown-item" href="new_hp.html">New</a>
                             <a class="dropdown-item" href="from_existing.html">From Existing</a>
                         </div>
                     </li>
@@ -67,6 +70,127 @@
     <!-- Wallpaper -->
 
     <!-- Main Content -->
+    <main class="container mt-5">
+        <h3 class="text-center">Create a Honeypot</h3>
+        <form action="/Frontend/public/php/create_honeypot.php" method="POST" class="mt-4">
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="honeypotName">Honeypot Name:</label>
+                        <input type="text" class="form-control" id="honeypotName" name="honeypotName" placeholder="Enter honeypot name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filepathName">Filepath:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="filepathName" name="filepathName" placeholder="Enter filepath" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="selectFile()">
+                                    <i class="fas fa-folder-open"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="honeypotType">Region:</label>
+                        <select class="form-control" id="regionType" name="regionType" required>
+                            <option value="" disabled selected>Select Region</option>
+                            <option value="web">Asia</option>
+                            <option value="network">Central America</option>
+                            <option value="database">Europe</option>
+                            <option value="network">Middle East</option>
+                            <option value="network">North America</option>
+                            <option value="network">Pacific</option>
+                            <option value="network">South America</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serverIP">Inbound Rules:</label>
+                        <input type="text" class="form-control" id="inboundRules" name="inboundRules" placeholder="Add Rules:" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serverIP">Outbound Rules:</label>
+                        <input type="text" class="form-control" id="outboundRules" name="outboundRules" placeholder="Add Rules:" required>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="honeypotType">Honeypot Type:</label>
+                        <select class="form-control" id="honeypotType" name="honeypotType" required>
+                            <option value="" disabled selected>Select honeypot type</option>
+                            <option value="web">Cowrie</option>
+                            <option value="database">More choices coming soon</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interactionLevel">Interaction Level:</label>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="highLevel" name="interactionLevel" value="High" required>
+                            <label class="form-check-label" for="highLevel">High</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="lowLevel" name="interactionLevel" value="Low" required>
+                            <label class="form-check-label" for="lowLevel">Low</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serverIP">Server IP:</label>
+                        <input type="text" class="form-control" id="serverIP" name="serverIP" placeholder="192.168.1.1" pattern="^((2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)\.){3}(2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)$" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serverIP">Primary DNS:</label>
+                        <input type="text" class="form-control" id="primaryDNS" name="primaryDNS" placeholder="222.222.222.222" pattern="^((2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)\.){3}(2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)$" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="secondaryDNS">Secondary DNS:</label>
+                        <input type="text" class="form-control" id="secondaryDNS" name="secondaryDNS" placeholder="333.333.333.333" pattern="^((2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)\.){3}(2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)$" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="honeypotDescription">Description:</label>
+                        <textarea class="form-control" id="honeypotDescription" name="honeypotDescription" rows="3" placeholder="Enter honeypot description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interactionLevel">Interaction Level:</label>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="anyProtocol" name="anyProtocol" value="Any" required>
+                            <label class="form-check-label" for="anyProtocol">Any</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="tcpProtocol" name="tcpProtocol" value="TCP" required>
+                            <label class="form-check-label" for="tcpProtocol">TCP</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="udpProtocol" name="udpProtocol" value="UDP" required>
+                            <label class="form-check-label" for="udpProtocol">UDP</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="icmpProtocol" name="icmpProtocol" value="ICMP" required>
+                            <label class="form-check-label" for="icmpProtocol">ICMP</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning btn-block">Create Honeypot</button>
+            <button type="button" class="btn btn-warning btn-block">Back</button>
+        </form>
+    </main>
+
 </body>
 
 <!-- Footer -->
