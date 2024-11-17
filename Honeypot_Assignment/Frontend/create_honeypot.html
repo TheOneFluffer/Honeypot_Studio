@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="../public/css/format.css">
+
+    <style>
+        /* Set up the layout to keep footer at the bottom */
+        
+        body,
+        html {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            /* background: url('/Images/honey.png') no-repeat center center fixed; */
+            background-size: cover;
+            background-color: #e1f16b;
+        }
+        
+        main {
+            flex: 1;
+        }
+        
+        footer {
+            position: sticky;
+            bottom: 0;
+        }
+        
+        .draggable {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            margin: 10px;
+            text-align: center;
+            line-height: 100px;
+        }
+        
+        .droppable {
+            width: 200px;
+            height: 200px;
+            background-color: lightgreen;
+            text-align: center;
+            padding-top: 80px;
+        }
+    </style>
+
+    <script>
+        $(function() {
+            $(".draggable").draggable();
+            $(".droppable").droppable({
+                drop: function(event, ui) {
+                    $(this).addClass("ui-state-highlight").find("p").html("Dropped!");
+
+                    // Change the color and text back after a delay
+                    setTimeout(() => {
+                        $(this).removeClass("ui-state-highlight").find("p").html("Drag me!");
+                        $(".draggable").css("background-color", "lightblue").html("Drag me!");
+                    }, 500); // Change back after 2 seconds
+                }
+            });
+        });
+    </script>
+</head>
+
+
+<!-- Header -->
+<header class="bg-warning text-white bold">
+    <h3>Honeypot</h3>
+    <h3>Studio</h3>
+
+    <!--Navigation bar-->
+    <nav class="navbar navbar-expand-lg bg-warning text-white py-3">
+        <div class="container">
+            <a class="navbar-brand text-white bold" href="home.html">Honeypot Studio</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" id="createDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Create </a>
+                        <div class="dropdown-menu" aria-labelledby="createDropdown">
+                            <a class="dropdown-item" href="new_hp.html">New</a>
+                            <a class="dropdown-item" href="from_existing.html">From Existing</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="manage_hp.html">Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="credits.html">Credits</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content with Table -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Manage Your Honeypots</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Honeypot Name</th>
+                <th scope="col">Location</th>
+                <th scope="col">Website</th>
+                <th scope="col">Active</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Example Honeypot 1</td>
+                <td>Location 1</td>
+                <td><a href="https://example.com" target="_blank">example.com</a></td>
+                <td>Yes</td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Example Honeypot 2</td>
+                <td>Location 2</td>
+                <td><a href="https://example2.com" target="_blank">example2.com</a></td>
+                <td>No</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<body>
+    <a href="new_hp.html" class="btn btn-warning text-center">Add New</a>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>
