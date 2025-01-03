@@ -1,0 +1,85 @@
+/* ====== Navbar Styling ====== */
+.navbar {
+    background-color: #F2711C; /* Honey orange color */
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.navbar h1 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar li {
+    margin-bottom: 10px;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* when hover over dropdown option */
+.navbar a:hover {
+    background-color: #ff9933; /* Lighter orange on hover */
+}
+
+.navbar .dropdown {
+    position: relative;
+}
+
+/* dropdown box customization */
+.navbar .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #F2711C;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.navbar .dropdown-content a {
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+.navbar .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.navbar a.active { /*to make tab for active page to be black and underlined*/
+    color: black;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* dropdown arrow for create and manage*/
+.dropdown-arrow {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+    visibility: hidden; /* Initially hidden */
+}
+
+/* dropdown arrow for create and manage*/
+.dropdown:hover .dropdown-arrow {
+    visibility: visible; /* Show the arrow on hover */
+}

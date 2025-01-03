@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dndstyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="script.js"></script>
+    <script src="dndscript.js"></script>
+    <title>HoneypotStudio CreateNew</title>
+
+
+
+</head>
+
+
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h1 style="text-align: center; color: white; font-family: cursive">Honeypot Studio</h1>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#">Create <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="CreateNew.html">New</a></li>
+                    <li><a href="CreateExisting.html">From Existing</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Layout Container -->
+    <div class="container">
+        <!-- Left Column: Drop Box -->
+        <div class="column" id="drop-column">
+            <h3>Drop Box</h3>
+
+            <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <!-- Dropped words will appear here -->
+            </div>
+
+            <!-- Reset Button -->
+            <button onclick="resetDraggables()">Reset</button>
+        </div>
+
+        <!-- Right Column: Draggable Items -->
+        <div class="column" id="draggable-container">
+            <h3>Honeypot Drag and Drop Configuration</h3>
+
+            <div class="draggable-category" id="interactionLevel" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h4>Interaction Level</h4>
+                <span id="high" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Interaction Level">High</span>
+                <span id="low" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Interaction Level">Low</span>
+            </div>
+
+            <div class="draggable-category" id="honeypotType" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h4>Honeypot Type</h4>
+                <span id="honeytrap" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Honeypot Type">HoneyTrap</span>
+                <span id="cowrie" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Honeypot Type">Cowrie</span>
+                <span id="dionaea" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Honeypot Type">Dionaea</span>
+                <span id="honeyd" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Honeypot Type">Honeyd</span>
+            </div>
+            <!-- --------------------------------------------------------------------------------------------------- -->
+            <!-- Version Box will appear only when a honeypot type is dropped -->
+            <div id="versionBox" class="draggable-category" ondrop="dropVersion(event)" ondragover="allowDrop(event)"
+                style="display: none;">
+                <h4 id="versionLabel">Version: </h4>
+                <span id="version1" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Version">Version 1</span>
+                <span id="version2" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Version">Version 2</span>
+                <span id="version3" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Version">Version 3</span>
+            </div>
+            <!-- --------------------------------------------------------------------------------------------------- -->
+            <div class="draggable-category" id="title3" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h4>Title 3</h4>
+                <span id="word5" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Protocol">Draggable 5</span>
+                <span id="word6" class="draggable" draggable="true" ondragstart="drag(event)"
+                    data-title="Protocol">Draggable 6</span>
+            </div>
+
+
+
+        </div>
+
+        <!-- Create Honeypot Button -->
+        <div>
+            <div>
+                <button onclick="openModal()">Create Honeypot</button>
+            </div>
+
+            <!-- Modal -->
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <div class="modal-header">Create Honeypot</div>
+                    <div class="modal-body">
+                        <label for="honeypotName">Honeypot Name:</label>
+                        <input type="text" id="honeypotName" placeholder="Enter Honeypot Name">
+
+                        <label for="description">Description:</label>
+                        <textarea id="description" rows="4" placeholder="Enter description"></textarea>
+
+                        <label for="Log Retention">Log Retention Duration (Days):</label>
+                        <input type="text" id="logRetention" placeholder="7">
+
+                        <label for="networkAssignment">Network Assignment:</label>
+                        <input type="text" id="ports" placeholder="eth0, eth1.">
+
+                        <label for="deploymentZone">Deployment Zones:</label>
+                        <input type="text" id="ports" placeholder="DMZ, Internal Network.">
+
+                        <label for="image">Image:</label>
+                        <input type="file" id="image">
+
+
+                        <label class="status-label">Status:</label>
+                        <label class="switch switch-enabled">
+                            <input type="checkbox" class="switch-input" checked="">
+                            <span class="switch-label" data-on="Enabled" data-off="Disabled"></span>
+                            <span class="switch-handle"></span>
+                        </label>
+
+                        <!-- Add the HoneyTrap-specific details section -->
+                        <div id="honeytrapOptions" style="display: none;">
+                            <h3>HoneyTrap Configuration</h3>
+
+                            <div class="protocol-button-row">
+                                <h4>Protocol Selection</h4>
+                                <button>HTTP</button>
+                                <button>SSH</button>
+                                <button>DNS</button>
+                                <button>RDP</button>
+                                <button>MQTT</button>
+                            </div>
+
+                            <h4>Port Configuration</h4>
+                            <input type="text" placeholder="Enter port (e.g., HTTP: 80)" />
+
+                            <h4>TLS/SSL Settings</h4>
+                            <input type="file" />
+                            <input type="text" placeholder="Enter path to .pem file" />
+
+                            <h4>Logging Options</h4>
+                            <input type="file" placeholder="Select log file format (JSON or plain text)" />
+
+                            <h4>Connection Limits</h4>
+                            <input type="number" min="1" placeholder="Max connections per service" />
+
+                            <h4>Response Customization</h4>
+                            <div class="drag-drop-area">Drag and drop HTTP/SSH templates here</div>
+                        </div>
+
+                        <!-- Add the Cowrie-specific details section -->
+                        <div id="cowrieOptions" style="display: none;">
+                            <h3>Cowrie Configuration</h3>
+
+                                <div class="protocol-button-row">
+                                    <h4>Protocol Selection</h4>
+                                    <button>SSH</button>
+                                    <button>Telnet</button>
+
+                                </div>
+
+                                <h4>Port Configuration</h4>
+                                <input type="text" placeholder="Enter port (e.g., HTTP: 80)" />
+
+                                <h4>Authentication Options</h4>
+                                <input type="text" placeholder="Enter Username" />
+                                <input type="text" placeholder="Enter Password" />
+
+                                <h4>Fake File System</h4>
+                                <input type="file" />
+
+                                <h4>Logging Options</h4>
+                                <input type="file" placeholder="Select log file format (JSON or plain text)" />
+
+                                <div id="ipRules" draggable="true">IP Whitelisting/Blacklisting</div>
+
+                        </div>
+
+                        <!-- Add the Dionaea-specific details section -->
+                        <div id="dionaeaOptions" style="display: none;">
+                            <h3>Dionaea Configuration</h3>
+                            <h4>Protocol Selection</h4>
+                                <button>HTTP</button>
+                                <button>SMB</button>
+                                <button>FTP</button>
+                                <button>TFTP</button>
+                                <button>SIP</button>
+                            
+
+                            <h4>Malware Handling</h4>
+                            <p>Directories for storing malware samples:</p>
+                            <input type="text" placeholder="/var/malware_samples/" />
+                            <h4>File hashing (e.g., MD5, SHA256), Malware forwarding to external services (e.g.,
+                                VirusTotal).</h4>
+                            <input type="file" />
+                            
+
+                            <h4>Payload Inspection</h4>
+                            Inspect executable files, Filter payloads by type (e.g., .exe, .zip).
+                            <input type="file" />
+
+                            <h4>Logging Configuration</h4>
+                            <input type="text" placeholder="Log directory (e.g., /var/log/dionaea/)" />                                                
+                            <input type="file" />
+                        </div>
+                    </div>
+
+                        <!-- Add the Honeyd-specific details section -->
+                        <div id="honeydOptions" style="display: none;">
+                            <h3>Honeyd Configuration</h3>
+
+                            <!-- Virtual Host Emulator -->
+                            <h4>Virtual Host Emulator</h4>
+                            <label>Specify IP Address or Range:</label>
+                            <input type="text" placeholder="e.g., 192.168.1.100" />
+                            <label>Assign Hostname:</label>
+                            <input type="text" placeholder="e.g., web-server" />
+                            <button onclick="addVirtualHost()">Add Virtual Host</button>
+
+                            <!-- Service Emulation -->
+                            <h4>Service Emulation</h4>
+                            <div class="protocol-button-row">
+                                <button>HTTP</button>
+                                <button>FTP</button>
+                                <button>SMTP</button>
+                            </div>
+                            <label>Drag-and-drop custom service responses:</label>
+                            <div class="drag-drop-area">Example: HTTP 200 OK, FTP 220 Welcome</div>
+
+                            <!-- Operating System Fingerprinting -->
+                            <h4>Operating System Fingerprinting</h4>
+                            <select>
+                                <option>Windows XP</option>
+                                <option>Linux 2.6</option>
+                                <option>FreeBSD 7.0</option>
+                                <option>Custom</option>
+                            </select>
+
+                            <!-- Port Configuration -->
+                            <h4>Port Configuration</h4>
+                            <div class="drag-drop-area">
+                                Drag to open/close ports: Example: Open 80 (HTTP), 21 (FTP).
+                            </div>
+
+                            <!-- Logging Configuration -->
+                            <h4>Logging Configuration</h4>
+                            <label>Upload Logging Configuration:</label>
+                            <input type="file" placeholder="Plain text, JSON" />
+                            <div class="drag-drop-area">Drag log storage location: /var/log/honeyd/.</div>
+                        </div>
+
+                        <h4>Items in Drop Box:</h4>
+                        <ul id="droppedItemsList"></ul>
+
+                        <button onclick="confirmHoneypot()">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+</body>
+
+</html>

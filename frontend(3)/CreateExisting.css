@@ -1,0 +1,315 @@
+.main-content {
+    width: 83%;
+    margin-left: 15%;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.search-bar button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.table-container {
+    border: 1px solid #000;
+    background-color: #f9f9a1;
+}
+
+.table-header,
+.table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.table-header div,
+.table-row div {
+    flex: 1;
+    text-align: center;
+}
+
+.table-row:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    width: 80%;
+    margin: 20px auto;
+    padding-left: 15%;
+}
+
+.column {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9ff;
+}
+
+.column h3 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Draggable styles */
+.draggable-category {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e8f7fc; /* Soft blue */
+    border: 1px solid #d0e7f2;
+}
+
+.draggable-category h4 {
+    margin: 0 0 10px;
+    color: #005b7f; /* Dark blue */
+}
+
+.draggable {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #fff5e6; /* Light orange */
+    border: 1px solid #ffcc99;
+    border-radius: 4px;
+    cursor: move;
+    display: inline-block;
+    color: #b35900; /* Darker orange */
+    font-weight: bold;
+}
+
+#div1 {
+    min-height: 300px;
+    border: 2px dashed #88d8b0; /* Soft green */
+    background-color: #e9fdf4; /* Pale green */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#div1:hover {
+    background-color: #d9f7ea; /* Slightly darker green when hovered */
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #000;
+}
+
+.modal-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.modal-body input,
+.modal-body textarea {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-body button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.modal-body button:hover {
+    background-color: #45a049;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styling for switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 80px;
+    height: 20px;
+    padding: 3px;
+    background-color: white;
+    border-radius: 18px;
+    box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.switch-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+.switch-label {
+    position: relative;
+    display: block;
+    height: inherit;
+    font-size: 10px;
+    text-transform: uppercase;
+    background: #eceeef;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+    transition: 0.15s ease-out;
+}
+
+.switch-label:before,
+.switch-label:after {
+    position: absolute;
+    top: 50%;
+    margin-top: -.5em;
+    line-height: 1;
+    transition: inherit;
+}
+
+.switch-label:before {
+    content: attr(data-off);
+    right: 11px;
+    color: #aaa;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.switch-label:after {
+    content: attr(data-on);
+    left: 11px;
+    color: white;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+}
+
+.switch-input:checked~.switch-label {
+    background: #47a8d8;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch-input:checked~.switch-label:before {
+    opacity: 0;
+}
+
+.switch-input:checked~.switch-label:after {
+    opacity: 1;
+}
+
+.switch-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    transition: left 0.15s ease-out;
+}
+
+.switch-input:checked~.switch-handle {
+    left: 64px;
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for version draggable box */
+#versionBox {
+    display: none; /* Hidden by default */
+    border: 2px solid #47a8d8;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.version-label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.version-buttons button {
+    margin: 5px;
+}
+
+/* Button styles */
+.select-button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.select-button:hover {
+    background-color: #45a049;
+}
+
+button1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
