@@ -4,29 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/format.css">
+
+    <style>
+        /* Full-page layout setup */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #e1f16b;
+            background-size: cover;
+        }
+
+        .main-content {
+            flex: 1;
+            /* Pushes the footer to the bottom */
+        }
+
+        footer {
+            background-color: #343a40;
+            /* Matches Bootstrap's dark background */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
     <meta name="author" content="HoneypotStudio">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="ManageEdit.css">
-    <link rel="stylesheet" href="navstyles.css"> <!-- nav styles -->
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
     <script src="script(navbar).js"></script> <!-- navbar script -->
-    <script src="ManageEdit.js"></script>
+    <script src="homescript.js"></script>
     <script src="script.js"></script>
-    <title>HoneypotStudio ManageEdit</title>
+    <title>HoneypotStudio Home</title>
 
 </head>
 
+
 <body>
+    <h1 style="text-align: center; color: white; font-family:cursive">Honeypot Studio</h1>
     <!-- navigation bar -->
     <div class="navbar">
-        <h1 style="text-align: center; color: white; font-family:cursive">Honeypot Studio</h1>
         <ul>
-
             <!-- dropdown optios for create -->
-            <li><a href="home.html">Home</a></li>
+            <li>
+                <a href="home.html">Home</a>
+            </li>
             <li class="dropdown">
                 <a href="#">Create <span class="dropdown-arrow">▼</span></a>
                 <ul class="dropdown-content">
-                    <li><a href="CreateNew.html">New</a></li>
+                    <li><a href="CreateNewTest.html">New</a></li>
                     <li><a href="CreateExisting.html">From Existing</a></li>
                 </ul>
             </li>
@@ -41,214 +73,54 @@
 
         </ul>
     </div>
-
-    <!-- Top section -->
-    <div class="top-section">
-        <!-- Left part: Pot Name and Status -->
-        <div class="left-section">
-            <h1>Pot Name</h1>
-            <label class="status-label">Status:</label>
-            <label class="switch switch-enabled">
-                <input type="checkbox" class="switch-input" checked="">
-                <span class="switch-label" data-on="Enabled" data-off="Disabled"></span>
-                <span class="switch-handle"></span>
-            </label>
-
-        </div>
-
-        <!-- Center part: Error bar -->
-        <div class="center-section">
-            <label class="error-label">Error(s) to be fixed:</label>
-            <div class="error-bar-container">
-                <div class="error-bar-fill"></div>
-            </div>
-        </div>
-
-        <!-- Right part: State, Threat level, and Icons -->
-        <div class="right-section">
-            <div class="state">State: <span>Running</span> / <span>Booting</span> / <span>Sleep</span></div>
-            <div class="threat-level">Threat level: <span class="level">Low</span> / Medium / High</div>
-
-            <button onclick="deleteHoneypot()">Delete</button>
-            <!-- Message Display -->
-            <div id="message" style="margin-top: 20px; display: none;"></div>
-
-        </div>
-    </div>
-
-    <!-- Main Body -->
+    <!-- Main Content -->
     <div class="main-content">
-        <h1>Honeypot Configuration</h1>
-
-        <!-- Cowrie Configuration -->
-        <div class="honeypot-section" id="cowrie-settings">
-            <h2>Cowrie Settings (SSH and Telnet Honeypot)</h2>
-            <h3>Protocol Selection</h3>
-            <select>
-                <option>SSH</option>
-                <option>Telnet</option>
-            </select>
-            <h3>Port Configuration</h3>
-            <p>Default: SSH: 22, Telnet: 23</p>
-            <input type="number" placeholder="Custom Port">
-            <h3>Authentication Options</h3>
-            <input type="checkbox"> Password Authentication
-            <input type="checkbox"> Public Key Authentication
-            <textarea placeholder="Username:"></textarea>
-            <textarea placeholder="Password:"></textarea>
-            <h3>Fake File System</h3>
-            <div class="dropzone">Drag files or directories</div>
-            <h3>Logging Options</h3>
-            <select>
-                <option>INFO</option>
-                <option>DEBUG</option>
-            </select>
+        <!-- Search and Action Buttons -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search honeypots" />
+            <button id="search-button">Search</button>
+            <button id="refresh-button" onclick="location.reload()">⟳</button>
+            <button id="delete-button">🗑</button>
         </div>
 
-        <!-- Honeyd Configuration -->
-        <div class="honeypot-section" id="honeyd-settings">
-            <h2>Honeyd Settings (Virtual Host Emulator)</h2>
-
-            <!-- Host Creation -->
-            <h3>Host Creation</h3>
-            <h3>Protocol Selection</h3>
-            <select>
-                <option>HTTP</option>
-                <option>FTP</option>
-                <option>SMTP</option>
-            </select>
-            <label for="virtual-host-ip">Specify IP Address/Range:</label>
-            <input type="text" id="virtual-host-ip" placeholder="e.g., 192.168.1.100">
-            <label for="hostname">Assign Hostname:</label>
-            <input type="text" id="hostname" placeholder="e.g., web-server">
-            <button onclick="addVirtualHost()">Add Virtual Host</button>
-
-            <!-- Service Emulation -->
-            <h3>Service Emulation</h3>
-            <div class="dropzone" id="service-profiles">
-                Drag predefined service profiles (e.g., HTTP, FTP, SMTP) or custom responses here
-            </div>
-
-            <!-- Operating System Fingerprinting -->
-            <h3>Operating System Fingerprinting</h3>
-            <select>
-                <option>Windows XP</option>
-                <option>Linux 2.6</option>
-                <option>FreeBSD 7.0</option>
-                <option>Custom</option>
-            </select>
-
-            <!-- Port Configuration -->
-            <h3>Port Configuration</h3>
-            <div class="dropzone" id="port-config">
-                Drag ports to open/close (e.g., 80 for HTTP, 21 for FTP)
-            </div>
-
-            <!-- Logging Configuration -->
-            <h3>Logging Configuration</h3>
-            <label for="honeyd-log-format">Log Format:</label>
-            <select id="honeyd-log-format">
-                <option value="plain-text">Plain Text</option>
-                <option value="JSON">JSON</option>
-            </select>
-            <label for="honeyd-log-location">Log Storage Location:</label>
-            <input type="text" id="honeyd-log-location" placeholder="/var/log/honeyd/">
+        <!-- Table Container -->
+        <div class="container my-5">
+            <h2 class="text-center mb-4">Manage Your Honeypots</h2>
+            <table id="honeypot-table" class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">No.</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Port</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Updated At</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
         </div>
 
-        <!-- Dionaea Configuration -->
-        <div class="honeypot-section" id="dionaea-settings">
-            <h2>Dionaea Settings (Malware-Capturing Honeypot)</h2>
-
-            <h3>Protocol Selection</h3>
-            <select>
-                <option>HTTP</option>
-                <option>SMB</option>
-                <option>FTP</option>
-                <option>TFTP</option>
-                <option>SIP</option>
-            </select>
-            <!-- Service Configuration -->
-            <h3>Service Configuration</h3>
-            <div class="dropzone" id="dionaea-services">
-                Drag services to enable/disable (e.g., SMB, HTTP, FTP)
-            </div>
-
-            <!-- Malware Handling -->
-            <h3>Malware Handling</h3>
-            <label>Malware Storage Directory:</label>
-            <input type="text" placeholder="/var/malware_samples/">
-            <label>File Hashing and Forwarding:</label>
-            <div class="dropzone">(e.g., MD5, SHA256, VirusTotal)</div>
-            <input type="file" />
-
-            <!-- Payload Inspection -->
-            <h3>Payload Inspection</h3>
-            <div class="dropzone" id="payload-inspection">
-                Drag to enable inspection for specific file types (e.g., .exe, .zip)
-            </div>
-
-            <!-- Logging Configuration -->
-            <h3>Logging Configuration</h3>
-            <label for="dionaea-log-format">Log File Format:</label>
-            <select id="dionaea-log-format">
-                <option value="SQLite">SQLite</option>
-                <option value="JSON">JSON</option>
-            </select>
-            <label for="dionaea-log-location">Log Directory:</label>
-            <input type="file" />
-            <input type="text" id="dionaea-log-location" placeholder="/var/log/dionaea/">
-        </div>
-
-        <!-- Honeytrap Configuration -->
-        <div class="honeypot-section" id="honeytrap-settings">
-            <h2>Honeytrap Settings (High-Interaction Honeypot)</h2>
-            <!-- Protocol Selection -->          
-            <h3>Protocol Selection</h3>
-            <select>
-                <option>HTTP</option>
-                <option>SSH</option>
-                <option>DNS</option>
-                <option>RDP</option>
-                <option>MQTT</option>
-            </select>
-
-            <!-- Port Configuration -->
-            <h3>Port Configuration</h3>
-            <div class="dropzone" id="honeytrap-ports">
-                Drag ports to open/close (e.g., HTTP: 80, SSH: 22)
-            </div>
-
-            <!-- TLS/SSL Settings -->
-            <h3>TLS/SSL Settings</h3> SSL/TLS certificates here
-            <div class="dropzone" id="ssl-certificates">
-                <input type="file" />
-            </div>
-
-            <!-- Logging Options -->
-            <h3>Logging Options</h3>
-            <label for="honeytrap-log-format">Log Format:</label>
-            <input type="file" />
-            <select id="honeytrap-log-format">
-                <option value="JSON">JSON</option>
-                <option value="plain-text">Plain Text</option>
-            </select>
-            <label for="honeytrap-log-path">Log Storage Path:</label>
-            <input type="text" id="honeytrap-log-path" placeholder="/var/log/honeytrap/">
-
-            <!-- Connection Limits -->
-            <h3>Connection Limits</h3>
-            <label>Maximum Connections Per Service:</label>
-            <input type="number" placeholder="50">
-
-            <!-- Response Customization -->
-            <h3>Response Customization</h3>
-            <div class="dropzone" id="response-templates">
-                Drag-and-drop response templates (e.g., HTTP custom webpage, SSH fake shell output)
-            </div>
-        </div>
-
-
-
+        <!-- Button to redirect to the Add honeypot page -->
+        <button type="button" class="btn btn-warning text-center">
+            <a href="CreateNewTest.html">Add New Honeypot</a>
+        </button>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="Fetch_hpscript.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
 
 </html>

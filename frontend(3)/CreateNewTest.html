@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dndstyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="script.js"></script>
+    <title>Create New</title>
+
+    <style>
+        /* Full-page layout setup */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #e1f16b;
+            background-size: cover;
+        }
+
+        .main-content {
+            flex: 1;
+            /* Pushes the footer to the bottom */
+        }
+
+        footer {
+            background-color: #343a40;
+            /* Matches Bootstrap's dark background */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h4 {
+            color: green;
+            font-size: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <h1 style="text-align: center; color: white; font-family: cursive">Honeypot Studio</h1>
+    <div class="navbar">
+        <ul class="nav-list">
+            <li><a href="home.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#">Create <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="CreateNew.html">New</a></li>
+                    <li><a href="CreateExisting.html">From Existing</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Form Layout -->
+    <form id="honeypotForm">
+        <div class="column">
+            <h3>New Honeypot Configuration</h3>
+            <!-- Honeypot Name -->
+            <div class="text-category" id="nameCategory">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter name here:">
+            </div>
+
+            <!-- Creating new honeypot -->
+            <div class="text-category" id="typeCategory">
+                <label for="type">Type</label>
+                <select name="type" id="honeypotType" required>
+                    <option value="">Select a type</option>
+                    <option value="high">High</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+
+            <div class="text-category" id="portsCategory">
+                <label for="ports">Ports</label>
+                <input type="number" id="ports" name="ports" placeholder="80" required>
+            </div>
+
+            <div class="text-category" id="imageCategory">
+                <label for="image">Image</label>
+                <input type="text" id="image" name="image" placeholder="cowrie/cowrie:latest" required>
+            </div>
+
+            <div class="text-category" id="netinterfaceCategory">
+                <label for="networkInterface">Network Interface</label>
+                <select name="networkInterface" id="networkInterface" required>
+                    <option value="">Select a type</option>
+                    <option value="netplan-ens33">ens33</option>
+                    <option value="netplan-ens37">ens37</option>
+                </select>
+            </div>
+
+
+            <div class="text-category" id="lastOctetCategory">
+                <label for="lastOctet">Last Octet</label>
+                <input type="number" id="lastOctet" name="lastOctet" placeholder="236" required>
+            </div>
+
+            <div class="text-category" id="logRetentionCategory">
+                <label for="logRetention">Log Retention</label>
+                <input type="number" id="logRetention" name="logRetention" placeholder="1" required>
+            </div>
+
+            <div class="text-category" id="honeynetCategory">
+                <label for="honeynet">Honeynet</label>
+                <input type="text" id="honeynet" name="honeynet" placeholder="location-01" required>
+            </div>
+
+            <div class="text-category" id="deploymentLocationCategory">
+                <label for="deploymentLocation">Deployment Location</label>
+                <input type="text" id="deploymentLocation" name="deploymentLocation" placeholder="VM-01" required>
+            </div>
+
+            <div class="text-category" id="alertCategory">
+                <label for="alert">Alert</label>
+                <input type="text" id="alert" name="alert" placeholder="Critical, High" required>
+            </div>
+        </div>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" id="createHoneypot">Create Honeypot</button>
+        <button type="reset">Clear Form</button>
+
+        <div id="statusModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p id="statusMessage"></p>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                type: document.getElementById('honeypotType').value,
+                ports: [parseInt(document.getElementById('ports').value, 10)],
+                image: document.getElementById('image').value,
+                networkInterface: document.getElementById('networkInterface').value,
+                lastOctet: parseInt(document.getElementById('lastOctet').value, 10),
+                logRetention: parseInt(document.getElementById('logRetention').value, 10),
+                honeynet: document.getElementById('honeynet').value,
+                deploymentLocation: document.getElementById('deploymentLocation').value,
+                alert: document.getElementById('alert').value,
+                submit: document.getElementById('honeypotForm').addEventListener('submit', submitForm)
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/honeypots/deploy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showStatusModal(`Honeypot "${formData.name}" deployed successfully.`);
+                } else {
+                    const error = await response.json();
+                    showStatusModal(`Failed to deploy honeypot: ${error.message}`);
+                }
+            } catch (err) {
+                showStatusModal(`Error: ${err.message}`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('honeypotForm').addEventListener('submit', submitForm);
+        });
+
+    </script>
+
+    <p><span id="msg"></span></p>
+
+</body>
+
+</html>
