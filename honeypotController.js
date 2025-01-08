@@ -411,8 +411,39 @@ const checkForUploads = (req, res) => {
         });
     });
 };
+// Elasticsearch configuration
+const ELASTICSEARCH_URL = 'http://localhost:9200'; // Base URL for Elasticsearch
 
+const getLogs = async (req, res) => {
+    const { index } = req.query; // Extract the index name from query parameters
 
+    if (!index) {
+        return res.status(400).json({ error: 'Missing required "index" query parameter' });
+    }
+
+    try {
+        // Query Elasticsearch to get logs from the specified index
+        const response = await axios.post(
+            `${ELASTICSEARCH_URL}/${index}/_search?pretty`, // Use the user-provided index
+            {
+                query: {
+                    match_all: {}, // Retrieve all logs
+                },
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        // Send back the logs to the client
+        res.status(200).json(response.data.hits.hits); // Return the logs
+    } catch (error) {
+        console.error('Error retrieving logs:', error.response?.data || error.message);
+        res.status(500).json({ error: 'Failed to fetch logs' });
+    }
+};
 
 module.exports = {
     createHoneypot,
