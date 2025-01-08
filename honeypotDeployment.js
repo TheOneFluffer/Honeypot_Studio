@@ -163,62 +163,21 @@ const deployHoneypot = async (honeypotConfig) => {
         throw new Error(error.message || "Failed to deploy honeypot");
     }
 };
-
-
-
-
-// Stop and remove a honeypot container
-/*const removeHoneypot = async (containerName) => {
-    try {
-        const container = docker.getContainer(containerName);
-        console.log(`Stopping container: ${containerName}`);
-        await container.stop();
-
-        console.log(`Removing container: ${containerName}`);
-        await container.remove();
-
-        console.log(`Honeypot ${containerName} removed successfully`);
-
-        // Delete the honeypot's details from the database
-        const deletedHoneypot = await Honeypot.findOneAndDelete({ name: containerName });
-
-        if (!deletedHoneypot) {
-            console.warn(`Honeypot ${containerName} not found in database`);
-        } else {
-            console.log('Honeypot details deleted from database:', deletedHoneypot);
-        }
-
-        // Use the existing log model to drop the collection
-        const LogModel = createLogModel(containerName); // Use the pre-existing log model
-        await LogModel.collection.drop(); // Drop the logs collection for this honeypot
-
-        console.log(`Logs collection for honeypot ${containerName} dropped`);
-
-        return { status: 'removed', name: containerName };
-    } catch (error) {
-        console.error('Error removing honeypot:', error);
-        throw new Error('Failed to remove honeypot');
-    }
-};*/
-
 const removeLinesFromFile = async (filePath, pattern) => {
     try {
-        // Read the content of the file
-        const fileContent = await fs.readFile(filePath, { encoding: 'utf8' });
+        const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
+        const filteredLines = fileContent
+            .split('\n')
+            .filter(line => !line.includes(pattern));
 
-        // Split the content into lines and filter out lines containing the pattern
-        const lines = fileContent.split('\n');
-        const filteredLines = lines.filter(line => !line.includes(pattern));
-
-        // Write the filtered lines back to the file
-        await fs.writeFile(filePath, filteredLines.join('\n'), 'utf8');
-
+        await fs.promises.writeFile(filePath, filteredLines.join('\n'), { encoding: 'utf8' });
         console.log(`Removed lines containing "${pattern}" from ${filePath}`);
     } catch (err) {
         console.error(`Error processing ${filePath}:`, err);
         throw err;
     }
 };
+
 const removeHoneypot = async (containerName) => {
     try {
         const container = docker.getContainer(containerName);
