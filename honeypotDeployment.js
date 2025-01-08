@@ -142,8 +142,8 @@ const deployHoneypot = async (honeypotConfig) => {
         console.log("Honeypot details saved to database:", honeypot);
 
         // Dynamically create a log schema and collection for deployed honeypot
-        const LogModel = createLogModel(name);
-        console.log(`Log schema created for honeypot: logs_${name}`);
+        //const LogModel = createLogModel(name);
+        //console.log(`Log schema created for honeypot: logs_${name}`);
 
         // Save logRetention to logretention.txt
         if (logRetention) {
@@ -177,18 +177,19 @@ const removeLinesFromFile = async (filePath, pattern) => {
         throw err;
     }
 };
-
-const removeHoneypot = async (containerName) => {
+const removeHoneypot = async (containerID, containerName) => {
     try {
-        const container = docker.getContainer(containerName);
-        console.log(`Stopping container: ${containerName}`);
+        // Stop and remove container based on containerID
+        const container = docker.getContainer(containerID);
+        console.log(`Stopping container: ${containerID}`);
         await container.stop();
 
-        console.log(`Removing container: ${containerName}`);
+        console.log(`Removing container: ${containerID}`);
         await container.remove();
 
-        console.log(`Honeypot ${containerName} removed successfully`);
+        console.log(`Honeypot container with ID ${containerID} removed successfully`);
 
+        // Proceed with the rest of the operations using containerName
         const deletedHoneypot = await Honeypot.findOneAndDelete({ name: containerName });
         if (!deletedHoneypot) {
             console.warn(`Honeypot ${containerName} not found in database`);
@@ -218,11 +219,12 @@ const removeHoneypot = async (containerName) => {
             console.warn(`File severity_${containerName}.txt not found`);
         }
 
-        return { status: 'removed', name: containerName };
+        return { status: 'removed', containerID, name: containerName };
     } catch (error) {
         console.error('Error removing honeypot:', error);
         throw new Error('Failed to remove honeypot');
     }
 };
+
 
 module.exports = { deployHoneypot, removeHoneypot };
