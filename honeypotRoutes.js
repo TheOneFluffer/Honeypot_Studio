@@ -1,5 +1,5 @@
 const express = require('express');
-const { createHoneypot, getHoneypots, updateHoneypot, deleteHoneypot, deployHoneypotController, removeHoneypotController, getHoneypotStatus, logHoneypotEvent, startAllHoneypots,fetchLogs,fetchHoneypotLogs, checkForUploads } = require('../controllers/honeypotController');
+const { createHoneypot, getHoneypots, updateHoneypot, deleteHoneypot, deployHoneypotController, removeHoneypotController, getHoneypotStatus, logHoneypotEvent, startAllHoneypots,fetchLogs,fetchHoneypotLogs, checkForUploads, fetchAllLogs, getLogs } = require('../controllers/honeypotController');
 const router = express.Router();
 
 // Routes
@@ -15,4 +15,6 @@ router.post('/honeypots/start', startAllHoneypots);
 router.get('/logs/:containerId', fetchLogs);
 router.post('/honeypots/logs/:honeypotName', fetchHoneypotLogs);
 router.get('/honeypots/check-uploads/:containerID', checkForUploads);
+router.get('/honeypots/alllogs/:containerId', fetchAllLogs); //Get all logs from docker individual honeypot 
+router.get('/honeypots/logs',getLogs) //Get all filtered logs from Elkstack individually for every honeypot
 module.exports = router;
