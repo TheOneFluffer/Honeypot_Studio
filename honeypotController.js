@@ -77,17 +77,23 @@ const deployHoneypotController = async (req, res) => {
 // Remove a honeypot
 const removeHoneypotController = async (req, res) => {
     try {
-        const { name } = req.params; // Expect container name
-        const removalStatus = await removeHoneypot(name);
+        const { containerID, name: containerName } = req.params;
+
+        if (!containerID || !containerName) {
+            return res.status(400).json({ message: 'containerID and containerName are required' });
+        }
+
+        const removalStatus = await removeHoneypot(containerID, containerName);
         res.status(200).json(removalStatus);
     } catch (error) {
-        res.status(500).json({ message: 'Error removing honeypot', error });
+        console.error('Error in removeHoneypotController:', error);
         res.status(500).json({
             message: 'Error removing honeypot',
             error: error.stack || error.message,
         });
     }
 };
+
 
 // Get the status of running honeypots
 const getHoneypotStatus = async (req, res) => {
