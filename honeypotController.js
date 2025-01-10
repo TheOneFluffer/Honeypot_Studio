@@ -444,6 +444,51 @@ const getLogs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch logs' });
     }
 };
+// Define an async function to list Docker containers and their statuses
+const listDockerHoneypots = async () => {
+  return new Promise((resolve, reject) => {
+    // Run the Docker command to list containers with their names and statuses
+    exec('docker ps --format "{{.Names}} {{.Status}}"', (error, stdout, stderr) => {
+      if (error) {
+        return reject(`Error: ${stderr || error.message}`);
+      }
+
+      // Parse the output into an array of objects with name and status
+      const containers = stdout
+        .trim()
+        .split('\n')
+        .map(line => {
+          const [name, ...statusParts] = line.split(' ');
+          return { name, status: statusParts.join(' ') };
+        });
+
+      resolve(containers);
+    });
+  });
+};
+
+// Route to search for honeypots by name (partial search)
+const searchHoneypots = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+
+  try {
+    // Retrieve the list of honeypots (Docker containers)
+    const honeypots = await listDockerHoneypots();
+
+    // Perform a case-insensitive partial search
+    const results = honeypots.filter(honeypot =>
+      honeypot.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: `Failed to retrieve honeypots: ${error}` });
+  }
+};
 
 module.exports = {
     createHoneypot,
@@ -457,5 +502,6 @@ module.exports = {
     startAllHoneypots,
     fetchLogs,
     fetchHoneypotLogs,
-    checkForUploads
+    checkForUploads,
+    searchHoneypots
 };
