@@ -448,7 +448,7 @@ const getLogs = async (req, res) => {
 const listDockerHoneypots = async () => {
   return new Promise((resolve, reject) => {
     // Run the Docker command to list containers with their names and statuses
-    exec('docker ps --format "{{.Names}} {{.Status}}"', (error, stdout, stderr) => {
+    exec('docker ps -a --format "{{.Names}} {{.Status}}"', (error, stdout, stderr) => {
       if (error) {
         return reject(`Error: ${stderr || error.message}`);
       }
