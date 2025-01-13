@@ -4,6 +4,7 @@ const path = require('path');
 const  {createLogModel} = require('../models/HoneypotLog')
 const { exec, execSync } = require("child_process");
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
+const { Client } = require('@elastic/elasticsearch'); // For Elasticsearch interactions
 
 const fs = require('fs'); // To handle file operations
 // Helper function to simulate sleep/delay
@@ -183,7 +184,11 @@ const deployHoneypot = async (honeypotConfig) => {
     throw new Error(error.message || "Failed to deploy honeypot");
   }
 };
-// Stop and remove a honeypot container
+// Elasticsearch client setup
+const esClient = new Client({
+    node: 'http://localhost:9200', // Replace with your Elasticsearch URL
+});
+
 const removeLinesFromFile = async (filePath, pattern) => {
     try {
         const fileContent = await fs.promises.readFile(filePath, { encoding: 'utf8' });
@@ -211,7 +216,7 @@ const removeHoneypot = async (containerID, containerName) => {
 
         console.log(`Honeypot container with ID ${containerID} removed successfully`);
 
-        // Proceed with the rest of the operations using containerName
+        // Remove honeypot details from the database
         const deletedHoneypot = await Honeypot.findOneAndDelete({ name: containerName });
         if (!deletedHoneypot) {
             console.warn(`Honeypot ${containerName} not found in database`);
@@ -219,6 +224,7 @@ const removeHoneypot = async (containerID, containerName) => {
             console.log('Honeypot details deleted from database:', deletedHoneypot);
         }
 
+        // Drop associated logs collection
         const LogModel = createLogModel(containerName);
         await LogModel.collection.drop();
         console.log(`Logs collection for honeypot ${containerName} dropped`);
@@ -232,7 +238,7 @@ const removeHoneypot = async (containerID, containerName) => {
 
         console.log(`Data related to honeypot ${containerName} removed from logretention.txt and alert.txt`);
 
-        // Delete severity_{containerName}.txt
+        // Delete severity file
         const severityFilePath = path.join('/home/fyp/honeypot_studio_backend', `severity_${containerName}.txt`);
         if (fs.existsSync(severityFilePath)) {
             fs.unlinkSync(severityFilePath);
@@ -241,12 +247,28 @@ const removeHoneypot = async (containerID, containerName) => {
             console.warn(`File severity_${containerName}.txt not found`);
         }
 
+        // Delete Elastic Stack index for honeypot logs
+        const esIndex = `honeypot-logs-${containerName}`;
+        try {
+            console.log(`Deleting Elasticsearch index: ${esIndex}`);
+            await esClient.indices.delete({ index: esIndex });
+            console.log(`Elasticsearch index ${esIndex} deleted successfully`);
+        } catch (err) {
+            if (err.meta && err.meta.body && err.meta.body.error && err.meta.body.error.type === 'index_not_found_exception') {
+                console.warn(`Elasticsearch index ${esIndex} not found`);
+            } else {
+                console.error(`Error deleting Elasticsearch index ${esIndex}:`, err);
+                throw err;
+            }
+        }
+
         return { status: 'removed', containerID, name: containerName };
     } catch (error) {
         console.error('Error removing honeypot:', error);
         throw new Error('Failed to remove honeypot');
     }
 };
+
 // Function to start the honeypot
 const startHoneypot = async (containerName) => {
     try {
