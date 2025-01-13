@@ -7,6 +7,8 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
 const fs = require('fs'); // To handle file operations
 // Helper function to simulate sleep/delay
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Function to pull a Docker image with retry logic
 const pullDockerImageWithRetry = async (image, retries = 3, delay = 5000) => {
     for (let attempt = 1; attempt <= retries; attempt++) {
