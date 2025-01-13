@@ -1,5 +1,6 @@
 const Honeypot = require('../models/Honeypot');
-const { deployHoneypot, removeHoneypot } = require('../deploy/honeypotDeployment');
+const { deployHoneypot, removeHoneypot, startHoneypot, stopHoneypot } = require('../deploy/honeypotDeployment');
+//const { logEvent } = require('../utils/logEvent');
 const Docker = require('dockerode');
 const {exec} = require('child_process');
 const fs = require('fs');
@@ -20,7 +21,7 @@ const getHoneypots = async (req, res) => {
     }
 };
 
-// Update honeypot by ID  (make change to editExistingHoneypot)
+// Update honeypot by ID
 const updateHoneypot = async (req, res) => {
     try {
         const honeypot = await Honeypot.findByIdAndUpdate(
@@ -115,36 +116,21 @@ const getHoneypotStatus = async (req, res) => {
         res.status(500).json({ message: 'Error fetching honeypot status', error });
     }
 };
+// API endpoint to log events for a specific honeypot
+const logHoneypotEvent = async (req, res) => {
+    console.log('Received request body:', req.body)
+    const { name, event, sourceIP, details } = req.body;
 
-// Start Honeypot Endpoint
-const startHoneypotController = async (req, res) => {
+    console.log('Received event for honeypot', name);
+
     try {
-        const { name } = req.params; // Expect container name
-        const startStatus = await startHoneypot(name);
-        res.status(200).json(startStatus);
+        await logEvent(name, { event, sourceIP, details });
+        res.status(200).json({ message: 'Event logged successfully' });
     } catch (error) {
-        res.status(500).json({
-            message: 'Error starting honeypot',
-            error: error.stack || error.message,
-        });
+        res.status(500).json({ message: 'Error logging event', error });
     }
 };
 
-// Stop Honeypot Endpoint
-const stopHoneypotController = async (req, res) => {
-    try {
-        const { name } = req.params; // Expect container name
-        const stopStatus = await stopHoneypot(name);
-        res.status(200).json(stopStatus);
-    } catch (error) {
-        res.status(500).json({ message: 'Error stopping honeypot', error });
-        res.status(500).json({
-            message: 'Error stopping honeypot',
-            error: error.stack || error.message,
-        });
-    }
-};
-// Get all logs from particular honeypot and give severity 
 const fetchLogs = async (req, res) => {
     const { containerId } = req.params; // Extract container ID from the request
     const { honeypot_name } = req.query; // Extract honeypot name from the query parameters
@@ -205,7 +191,6 @@ function gradeSeverity(log) {
     if (/scan|enumeration|ftp|ssh|wget/i.test(log)) return 'Medium'; 
     return 'Low';
 }
-// Transfer filtered logs to ELKStack and MongoDB (from line 208 - 312)
 // Elasticsearch client
 const esClient = new Client({
     node: 'http://localhost:9200', // Replace with your Elasticsearch endpoint
@@ -310,7 +295,7 @@ const fetchHoneypotLogs = async (req, res) => {
         res.status(500).json({ message: 'Error fetching logs', error: error.message });
     }
 };
-// Check whether uploaded file in dionaea contains .exe extension. If have, alert the user
+
 const checkForUploads = (req, res) => {
     // Get the container ID from the route parameter
     const containerID = req.params.containerID;
@@ -359,7 +344,6 @@ const checkForUploads = (req, res) => {
         });
     });
 };
-// Fetch all the logs from a particular honeypot from docker using ContainerID or ContainerName
 const fetchAllLogs = async (req, res) => {
     const { containerId, containerName } = req.params;
 
@@ -467,29 +451,6 @@ const listDockerHoneypots = async () => {
     }
   };
 //Get container ID
-
-// API route to get container ID by name
-/*const getContainerIDRoute = async (req, res) => {
-    const { containerName } = req.query; // Extract container name from query parameter
-  
-    if (!containerName) {
-      return res.status(400).json({ error: 'Container name is required' });
-    }
-  
-    try {
-        // Run the docker command to get the container ID synchronously
-        const command = `docker ps -q --filter "name=${containerName}"`;
-        const containerID = execSync(command).toString().trim();
-    
-        if (!containerID) {
-          return res.status(404).json({ error: `No container found with name: ${containerName}` });
-        }
-    
-        res.json({ containerID }); // Send the container ID as a JSON response
-      } catch (error) {
-        res.status(500).json({ error: `Error executing Docker command: ${error.message}` }); // Handle errors
-      }
-  };*/
   const getContainerIDRoute = (req, res) => {
     const { containerName } = req.query; // Extract container name from query parameter
   
@@ -511,7 +472,35 @@ const listDockerHoneypots = async () => {
       res.status(500).json({ error: `Error executing Docker command: ${error.message}` }); // Handle errors
     }
   };
-  
+
+  // Start Honeypot Endpoint
+    const startHoneypotController = async (req, res) => {
+    try {
+        const { name } = req.params; // Expect container name
+        const startStatus = await startHoneypot(name);
+        res.status(200).json(startStatus);
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error starting honeypot',
+            error: error.stack || error.message,
+        });
+    }
+};
+
+    // Stop Honeypot Endpoint
+    const stopHoneypotController = async (req, res) => {
+    try {
+        const { name } = req.params; // Expect container name
+        const stopStatus = await stopHoneypot(name);
+        res.status(200).json(stopStatus);
+    } catch (error) {
+        res.status(500).json({ message: 'Error stopping honeypot', error });
+        res.status(500).json({
+            message: 'Error stopping honeypot',
+            error: error.stack || error.message,
+        });
+    }
+};
   
 module.exports = {
     getHoneypots,
@@ -525,5 +514,7 @@ module.exports = {
     fetchAllLogs,
     getLogs,
     searchHoneypots,
-    getContainerIDRoute
+    getContainerIDRoute,
+    startHoneypotController,
+    stopHoneypotController
 };
