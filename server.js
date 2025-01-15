@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const honeypotRoutes = require('./routes/honeypotRoutes');
+const sandboxRoutes = require('./routes/sandboxRoutes');
 //const logRoutes = require('./routes/logRoutes'); // Import log routes
 //const logRoute=require('./routes/logs')
 const LOG_RETENTION_FIlE = 'logretention.txt';
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api', honeypotRoutes);
+app.use('/api', sandboxRoutes);
 //app.use('/api', logRoutes);
 //app.use('/api/logs', logRoute)
 
