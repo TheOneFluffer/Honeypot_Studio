@@ -363,6 +363,65 @@ const fetchHoneypotLogs = async (req, res) => {
     }
 };
 
+/*const checkForUploads = (req, res) => {
+    // Get the container ID from the route parameter
+    const containerID = req.params.containerID;
+
+    if (!containerID) {
+        return res.status(400).json({ error: 'Container ID is required' });
+    }
+
+    // Command to list files in the /opt/dionaea/var/lib/dionaea/ftp/root directory inside the container
+    const command = `docker exec ${containerID} ls -lh /opt/dionaea/var/lib/dionaea/ftp/root`;
+
+    // Execute the command
+    exec(command, (err, stdout, stderr) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to execute docker command', details: stderr });
+        }
+
+        if (stderr) {
+            return res.status(500).json({ error: 'Error while listing files', details: stderr });
+        }
+
+        // Check if files are found
+        if (!stdout) {
+            return res.status(200).json({ message: 'No files uploaded in the directory' });
+        }
+
+        // Split the output into individual files and filter out empty lines
+        const files = stdout.split('\n').filter(Boolean);
+
+        // Check for .exe files
+        const exeFiles = files.filter(file => file.endsWith('.exe'));
+
+        // Prepare the response message
+        let responseMessage = 'Files uploaded';
+
+        // If .exe files are found, add an alert to the message
+        if (exeFiles.length > 0) {
+            responseMessage = 'Alert: .exe files uploaded';
+        }
+
+        // Return the list of all uploaded files and the message
+        return res.status(200).json({
+            message: responseMessage,
+            files: files,
+            exeFiles: exeFiles.length > 0 ? exeFiles : undefined
+        });
+    });
+};*/
+// Define the log schema
+const logSchema = new mongoose.Schema({
+    containerID: { type: String, required: true },
+    files: { type: [String], required: true },
+    exeFiles: { type: [String], required: true },
+    timestamp: { type: Date, default: Date.now }
+});
+
+// Create the Log model
+const Log = mongoose.model('Log', logSchema);
+
 const checkForUploads = (req, res) => {
     // Get the container ID from the route parameter
     const containerID = req.params.containerID;
@@ -402,6 +461,18 @@ const checkForUploads = (req, res) => {
         if (exeFiles.length > 0) {
             responseMessage = 'Alert: .exe files uploaded';
         }
+
+        // Create a new log entry
+        const newLog = new Log({
+            containerID,
+            files,
+            exeFiles
+        });
+
+        // Save the log to the database
+        newLog.save()
+            .then(() => console.log('Log saved successfully'))
+            .catch(err => console.error('Error saving log:', err));
 
         // Return the list of all uploaded files and the message
         return res.status(200).json({
