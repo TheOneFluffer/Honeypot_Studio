@@ -269,6 +269,7 @@ const removeLinesFromFile = async (filePath, pattern) => {
     }
 };
 
+//Usign the remove honeypot function
 const removeHoneypot = async (containerID, containerName) => {
     try {
         // Stop and remove container based on containerID
