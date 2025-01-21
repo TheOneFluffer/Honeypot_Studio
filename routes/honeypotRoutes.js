@@ -9,7 +9,8 @@ router.get('/honeypots', getHoneypots);
 router.post('/honeypots/deploy', deployHoneypotController);
 router.delete('/honeypots/remove/:name/:containerID', removeHoneypotController); //remove honeypot, elk stack, mongodb
 router.get('/honeypots/status', getHoneypotStatus);
-router.post('/logs/:containerId', fetchLogs); //Allows user to give criteria for severity of logs and grade logs according for the honeypots
+router.get('/logs/:containerId', fetchLogs); // Allow user to grade severity of logs (NOT GIVING OF CRITIERIA)
+//router.post('/logs/:containerId', fetchLogs); //Allows user to give criteria for severity of logs and grade logs according for the honeypots
 router.post('/honeypots/logs/:honeypotName', fetchHoneypotLogs);
 router.get('/honeypots/check-uploads/:containerID', checkForUploads); // check for file with .exe extension 
 router.get('/honeypots/alllogs/:containerId', fetchAllLogs); //Get all logs from docker individual honeypot 
