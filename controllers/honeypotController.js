@@ -128,8 +128,8 @@ const logHoneypotEvent = async (req, res) => {
         res.status(500).json({ message: 'Error logging event', error });
     }
 };
-
-/*const fetchLogs = async (req, res) => {
+// Provide the grading function for logs by default
+const fetchLogs = async (req, res) => {
     const { containerId } = req.params; // Extract container ID from the request
     const { honeypot_name } = req.query; // Extract honeypot name from the query parameters
 
@@ -188,8 +188,9 @@ function gradeSeverity(log) {
     if (/brute force|DoS|vulnerability/i.test(log)) return 'High';
     if (/scan|enumeration|ftp|ssh|wget/i.test(log)) return 'Medium'; 
     return 'Low';
-}*/
-const fetchLogs = async (req, res) => {
+}
+// Allow the user to specify the severity function 
+/*const fetchLogs = async (req, res) => {
     const { containerId } = req.params; // Extract container ID from the request
     const { honeypot_name } = req.query; // Extract honeypot name from the query parameters
     const { severityRules } = req.body; // Extract user-defined severity rules from the request body
@@ -256,7 +257,7 @@ function gradeSeverity(log, severityRules) {
         }
     }
     return 'Low'; // Default severity if no rule matches
-}
+}*/
 
 // Elasticsearch client
 const esClient = new Client({
