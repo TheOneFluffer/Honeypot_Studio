@@ -112,26 +112,6 @@ const deleteFile = async (filePath, fileName) => {
     }
 };
 
-// Function to save analysis results to a file
-const saveAnalysisResultsToFile = (results, honeypotName) => {
-    const filePath = `/home/user/Downloads/analysis_results_${honeypotName}.txt`;
-
-    const content = results
-        .map(
-            (result, index) =>
-                `Log #${index + 1}:\n` +
-                `File Name: ${result.fileName}\n` +
-                `Upload Response:\n${JSON.stringify(result.uploadResponse, null, 2)}\n\n` +
-                `Analysis Result:\n${JSON.stringify(result.analysisResult, null, 2)}\n\n` +
-                (result.fileDetails
-                    ?`Detailed File Information:\n${JSON.stringify(result.fileDetails, null, 2)}\n\n`
-                    : `Detailed File Information: Not available\n\n`)   
-        )
-        .join('\n=====================================================\n');
-
-    fs.writeFileSync(filePath, content);
-    console.log(`Analysis results saved to file: ${filePath}`);
-};
 
 // Controller to retrieve logs, check for `.exe` files, download them, and send to VirusTotal
 const processLogsForExeFiles = async (req, res) => {
@@ -202,9 +182,6 @@ const processLogsForExeFiles = async (req, res) => {
         if (results.length === 0) {
             return res.status(404).json({ message: 'No .exe files found in the logs.' });
         }
-
-        // Save the analysis results to a file
-        saveAnalysisResultsToFile(results, honeypotName);
 
         res.status(200).json({
             message: 'Exe files processed and sent to VirusTotal successfully.',
