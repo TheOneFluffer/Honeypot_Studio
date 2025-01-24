@@ -269,7 +269,6 @@ const removeLinesFromFile = async (filePath, pattern) => {
     }
 };
 
-//Usign the remove honeypot function
 const removeHoneypot = async (containerID, containerName) => {
     try {
         // Stop and remove container based on containerID
@@ -354,6 +353,7 @@ const startHoneypot = async (containerName) => {
         throw new Error('Failed to start honeypot');
     }
 };
+
 // Function to stop the honeypot
 const stopHoneypot = async (containerName) => {
     try {
@@ -555,5 +555,4 @@ const editExistingHoneypot = async (honeypotConfig) => {
 };
 
 
-module.exports = { deployHoneypot, removeHoneypot, startHoneypot,stopHoneypot, editExistingHoneypot};
-
+module.exports = { deployHoneypot, removeHoneypot, startHoneypot, stopHoneypot, editExistingHoneypot};
