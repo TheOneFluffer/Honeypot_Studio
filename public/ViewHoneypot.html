@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/format.css">
+
+    <style>
+        /* Full-page layout setup */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #e1f16b;
+            background-size: cover;
+        }
+
+        .main-content {
+            flex: 1; /* Pushes the footer to the bottom */
+        }
+
+        footer {
+            background-color: #343a40; /* Matches Bootstrap's dark background */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>HoneypotStudio Home</title>
+
+</head>
+
+
+<body>
+    <h1 style="text-align: center; color: white; font-family:cursive">Honeypot Studio</h1>
+    <!-- navigation bar -->
+    <div class="navbar">
+        <ul>
+            <!-- dropdown optios for create -->
+            <li>
+                <a href="home.html">Home</a>
+            </li>
+            <li class="dropdown">
+                <a href="#">Create <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="CreateNew.html">New</a></li>
+                    <li><a href="CreateExisting.html">From Existing</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Search and Action Buttons -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search honeypots" />
+            <button id="search-button">Search</button>
+            <button id="refresh-button" onclick="location.reload()">⟳</button>
+            <button id="delete-button">🗑</button>
+        </div>
+
+        <!-- Table Container -->
+        <div class="container my-5">
+            <h2 class="text-center mb-4">Honeypot Details</h2>
+            <table id="honeypot-table" class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">No.</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Port</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Updated At</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+<!-- Bootstrap JS and dependencies -->
+<script src="Fetch_hpscript.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>

@@ -1,0 +1,19 @@
+/* ========== General Styles ========== */
+body {
+    background-image: url('honeycombBackground.png');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+}
+
+
+/* body {
+    background-image: url('honeycombBackground.png');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+} */

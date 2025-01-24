@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/format.css">
+
+    <style>
+        /* Full-page layout setup */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #e1f16b;
+            background-size: cover;
+        }
+
+        .main-content {
+            flex: 1; /* Pushes the footer to the bottom */
+        }
+
+        footer {
+            background-color: #343a40; /* Matches Bootstrap's dark background */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .table-links {
+            margin: 20px auto;
+            width: 60%;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .table-links th, .table-links td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .table-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .table-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>HoneypotStudio Home</title>
+
+</head>
+
+<body>
+    <h1 style="text-align: center; color: white; font-family:cursive">Honeypot Studio</h1>
+    <!-- navigation bar -->
+    <div class="navbar">
+        <ul>
+            <li>
+                <a href="home.html" style="color: black; text-decoration: underline; font-weight: bold;">Home</a>
+            </li>
+            <li class="dropdown">
+                <a href="#">Create <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="CreateNew.html">New</a></li>
+                    <li><a href="CreateExisting.html">From Existing</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome page -->
+        <div class="search-bar">
+        </div>
+
+        <!-- Links Table -->
+        <table class="table-links">
+            <tr>
+                <th>Create</th>
+                <th>Manage</th>
+            </tr>
+            <tr>
+                <td><a href="CreateNew.html">Create New</a></td>
+                <td><a href="ManageEdit.html">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="CreateExisting.html">From Existing</a></td>
+                <td><a href="ManageRemediate.html">Remediate</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>
