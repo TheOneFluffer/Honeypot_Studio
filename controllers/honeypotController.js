@@ -2,13 +2,15 @@ const Honeypot = require('../models/Honeypot');
 const { deployHoneypot, removeHoneypot, startHoneypot, stopHoneypot, editExistingHoneypot } = require('../deploy/honeypotDeployment');
 //const { logEvent } = require('../utils/logEvent');
 const Docker = require('dockerode');
-const {exec} = require('child_process');
+const { exec } = require('child_process');
 const fs = require('fs');
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const mongoose = require('mongoose');
-const {Client} = require('@elastic/elasticsearch');
+const { Client } = require('@elastic/elasticsearch');
 const axios = require('axios');
 const { execSync } = require('child_process'); // Add this line to import execSync
+const {MongoClient} = require("mongodb");
+const path = require('path');
 
 
 // Get all honeypots
@@ -22,12 +24,12 @@ const getHoneypots = async (req, res) => {
 };
 
 // Update honeypot by container name
-const editHoneypotController = async(req,res ) => {
-    try{
-        const honeypotConfig = req.body; 
+const editHoneypotController = async (req, res) => {
+    try {
+        const honeypotConfig = req.body;
         const deploymentStatus = await editExistingHoneypot(honeypotConfig);
         res.status(200).json(deploymentStatus);
-    }catch(error){
+    } catch (error) {
         console.error('Update deployment error:', error.stack || error.message);
         res.status(500).json({
             message: 'Error updating honeypot',
@@ -35,6 +37,118 @@ const editHoneypotController = async(req,res ) => {
         });
     }
 }
+
+// Update honeypot by container name
+const renameHoneypotController = async (req, res) => {
+    const { oldName, newName } = req.query;
+
+    if (!oldName || !newName) {
+        return res.status(400).json({ error: "Both oldName and newName are required." });
+    }
+    const mongoURI = "mongodb://localhost:27017";
+    const dbName = "honeypot-studio";
+    const elasticURI = "http://localhost:9200";
+    const esClient = new Client({ node: elasticURI });
+
+    try {
+        // Docker rename
+        execSync(`docker rename ${oldName} ${newName}`);
+
+        // Update logretention.txt and alert.txt
+        const filesToUpdate = ["logretention.txt", "alert.txt"];
+        filesToUpdate.forEach((file) => {
+            if (fs.existsSync(file)) {
+                const content = fs.readFileSync(file, "utf8");
+                const updatedContent = content.replace(new RegExp(oldName, "g"), newName);
+                fs.writeFileSync(file, updatedContent, "utf8");
+            }
+        });
+
+        // Rename severity file
+        const oldSeverityFile = `severity_${oldName}.txt`;
+        const newSeverityFile = `severity_${newName}.txt`;
+        if (fs.existsSync(oldSeverityFile)) {
+            fs.renameSync(oldSeverityFile, newSeverityFile);
+        }
+
+        // Update MongoDB
+        const client = new MongoClient(mongoURI);
+        await client.connect();
+        const db = client.db(dbName);
+        const honeypotsCollection = db.collection("honeypots");
+
+        const updateResult = await honeypotsCollection.updateOne(
+            { name: oldName },
+            { $set: { name: newName } }
+        );
+
+        if (updateResult.matchedCount === 0) {
+            return res.status(404).json({ error: `No honeypot entry found with name: ${oldName}` });
+        }
+
+        await db.renameCollection(`logs_${oldName}`, `logs_${newName}`);
+        await client.close();
+
+        // Reindex in Elasticsearch
+        const oldIndexName = `honeypot-logs-${oldName}`;
+        const newIndexName = `honeypot-logs-${newName}`;
+
+        const indexExists = await esClient.indices.exists({ index: oldIndexName });
+        if (!indexExists) {
+            return res.status(404).json({ error: `Elasticsearch index ${oldIndexName} does not exist.` });
+        }
+
+        await esClient.reindex({
+            body: {
+                source: { index: oldIndexName },
+                dest: { index: newIndexName }
+            },
+            wait_for_completion: true
+        });
+
+        await esClient.indices.delete({ index: oldIndexName });
+
+        // Process logs and add filtered logs to the new index
+        const alertFile = "alert.txt";
+        if (!fs.existsSync(alertFile)) {
+            return res.status(404).json({ message: "Alert file not found." });
+        }
+
+        const alertData = fs.readFileSync(alertFile, "utf8");
+        const alertLines = alertData.split("\n").filter(line => line.trim() !== "");
+        const honeypotEntry = alertLines.find(line => line.startsWith(`${newName}:`));
+        if (!honeypotEntry) {
+            return res.status(400).json({ message: `Honeypot '${newName}' not found in alert.txt.` });
+        }
+
+        const severities = honeypotEntry.split(":")[1].split(",").map(s => s.trim());
+        const severityFile = `severity_${newName}.txt`;
+        if (!fs.existsSync(severityFile)) {
+            return res.status(404).json({ message: `Severity file for ${newName} not found.` });
+        }
+
+        const severityData = JSON.parse(fs.readFileSync(severityFile, "utf8"));
+        const filteredLogs = severityData.filter(log => severities.includes(log.severity));
+
+        if (filteredLogs.length === 0) {
+            return res.status(404).json({ message: `No logs match the specified severities for '${newName}'.` });
+        }
+
+        // Insert filtered logs into the new Elasticsearch index
+        const bulkBody = filteredLogs.flatMap(log => [
+            { index: { _index: newIndexName } },
+            log
+        ]);
+
+        await esClient.bulk({ body: bulkBody });
+
+        res.json({
+            message: `Honeypot renamed successfully.`
+        });
+    } catch (error) {
+        // res.status(500).json({ error: `Error renaming honeypot: ${error.message}` });
+    }
+};
 
 // Deploy a honeypot
 const deployHoneypotController = async (req, res) => {
@@ -44,13 +158,12 @@ const deployHoneypotController = async (req, res) => {
         res.status(200).json(deploymentStatus);
     } catch (error) {
         console.error('Deployment error:', error.stack || error.message);
-        res.status(500).json({ 
-            message: 'Error deploying honeypot', 
-            error: error.stack || error.message, 
+        res.status(500).json({
+            message: 'Error deploying honeypot',
+            error: error.stack || error.message,
         });
     }
 };
-
 
 const removeHoneypotController = async (req, res) => {
     try {
@@ -70,7 +183,6 @@ const removeHoneypotController = async (req, res) => {
         });
     }
 };
-
 
 // Get the status of running honeypots
 const getHoneypotStatus = async (req, res) => {
@@ -102,10 +214,10 @@ const getHoneypotStatus = async (req, res) => {
         // Apply type filter if specified
         const filteredHoneypots = type
             ? honeypots.filter(honeypot =>
-                  honeypot.image.toLowerCase().includes(type.toLowerCase())
-              )
+                honeypot.image.toLowerCase().includes(type.toLowerCase())
+            )
             : honeypots;
-        
+
         console.log('Filtered honeypots:', filteredHoneypots);
 
         res.status(200).json({ honeypots: filteredHoneypots });
@@ -128,6 +240,7 @@ const logHoneypotEvent = async (req, res) => {
         res.status(500).json({ message: 'Error logging event', error });
     }
 };
+
 // Provide the grading function for logs by default
 const fetchLogs = async (req, res) => {
     const { containerId } = req.params; // Extract container ID from the request
@@ -139,8 +252,10 @@ const fetchLogs = async (req, res) => {
 
     try {
         // Check if the container ID is '3be178edca01', and use the specific command for that container
-        const command = containerId === '3be178edca01' 
+        const command = containerId === '06b2910db9e2'
+            // const command = containerId === 'c82733abe016' 
             ? `docker exec ${containerId} cat /opt/dionaea/var/log/dionaea/dionaea.log`
+            // ? `docker exec ${containerId} cat admin:///var/lib/docker/containers/c82733abe0169404e9805864e086956e1c4dbeec581fd4abc8900fe495fc12d3`
             : `docker logs ${containerId}`;
 
         // Set maxBuffer size to 50MB (for large logs)
@@ -186,7 +301,7 @@ const fetchLogs = async (req, res) => {
 function gradeSeverity(log) {
     if (/ransomware|exploit|malware/i.test(log)) return 'Critical';
     if (/brute force|DoS|vulnerability/i.test(log)) return 'High';
-    if (/scan|enumeration|ftp|ssh|wget/i.test(log)) return 'Medium'; 
+    if (/scan|enumeration|ftp|ssh|wget/i.test(log)) return 'Medium';
     return 'Low';
 }
 // Allow the user to specify the severity function 
@@ -601,98 +716,98 @@ const listDockerHoneypots = async () => {
       res.status(500).json({ error: `Failed to retrieve honeypots: ${error}` });
     }
   };*/
-  // Define an async function to list Docker containers and their details
+// Define an async function to list Docker containers and their details
 const listDockerHoneypots = async () => {
     return new Promise((resolve, reject) => {
-      exec(
-        'docker ps -a --format "{{.Names}}|{{.Status}}|{{.Ports}}|{{.Image}}|{{.Networks}}"',
-        (error, stdout, stderr) => {
-          if (error) {
-            return reject(`Error: ${stderr || error.message}`);
-          }
-  
-          const containers = stdout
-            .trim()
-            .split('\n')
-            .map(line => {
-              const [name, status, ports, image, networks] = line.split('|');
-              return {
-                name: name.trim(),
-                status: status.trim(),
-                ports: ports.trim(),
-                image: image.trim(),
-                networks: networks.trim(),
-              };
-            });
-  
-          resolve(containers);
-        }
-      );
-    });
-  };
-  
-  // Function to search honeypots by name, ports, image, networks, or MongoDB fields
-  const searchHoneypots = async (req, res) => {
-    const { query } = req.query;
-  
-    if (!query) {
-      return res.status(400).json({ error: 'Query parameter is required' });
-    }
-  
-    try {
-      // Retrieve the list of Docker containers
-      const dockerHoneypots = await listDockerHoneypots();
-  
-      // Perform a case-insensitive partial search in Docker container details
-      const dockerResults = dockerHoneypots.filter(honeypot =>
-        Object.values(honeypot).some(field =>
-          field.toLowerCase().includes(query.toLowerCase())
-        )
-      );
-  
-      if (dockerResults.length > 0) {
-        return res.json(dockerResults);
-      }
-  
-      // If no match is found in Docker details, search in MongoDB
-      const mongoResults = await Honeypot.find({
-        $or: [
-          { deploymentLocation: { $regex: query, $options: 'i' } },
-          { type: { $regex: query, $options: 'i' } },
-        ],
-      }).lean();
-  
-      res.json(mongoResults);
-    } catch (error) {
-      res.status(500).json({ error: `Failed to retrieve honeypots: ${error}` });
-    }
-  };
-  
-//Get container ID
-  const getContainerIDRoute = (req, res) => {
-    const { containerName } = req.query; // Extract container name from query parameter
-  
-    if (!containerName) {
-      return res.status(400).json({ error: 'Container name is required' });
-    }
-  
-    try {
-      // Run the docker command to get the container ID synchronously
-      const command = `docker ps -q --filter "name=${containerName}"`;
-      const containerID = execSync(command).toString().trim();
-  
-      if (!containerID) {
-        return res.status(404).json({ error: `No container found with name: ${containerName}` });
-      }
-  
-      res.json({ containerID }); // Send the container ID as a JSON response
-    } catch (error) {
-      res.status(500).json({ error: `Error executing Docker command: ${error.message}` }); // Handle errors
-    }
-  };
+        exec(
+            'docker ps -a --format "{{.Names}}|{{.Status}}|{{.Ports}}|{{.Image}}|{{.Networks}}"',
+            (error, stdout, stderr) => {
+                if (error) {
+                    return reject(`Error: ${stderr || error.message}`);
+                }
 
-  // Start Honeypot Endpoint
-    const startHoneypotController = async (req, res) => {
+                const containers = stdout
+                    .trim()
+                    .split('\n')
+                    .map(line => {
+                        const [name, status, ports, image, networks] = line.split('|');
+                        return {
+                            name: name.trim(),
+                            status: status.trim(),
+                            ports: ports.trim(),
+                            image: image.trim(),
+                            networks: networks.trim(),
+                        };
+                    });
+
+                resolve(containers);
+            }
+        );
+    });
+};
+
+// Function to search honeypots by name, ports, image, networks, or MongoDB fields
+const searchHoneypots = async (req, res) => {
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({ error: 'Query parameter is required' });
+    }
+
+    try {
+        // Retrieve the list of Docker containers
+        const dockerHoneypots = await listDockerHoneypots();
+
+        // Perform a case-insensitive partial search in Docker container details
+        const dockerResults = dockerHoneypots.filter(honeypot =>
+            Object.values(honeypot).some(field =>
+                field.toLowerCase().includes(query.toLowerCase())
+            )
+        );
+
+        if (dockerResults.length > 0) {
+            return res.json(dockerResults);
+        }
+
+        // If no match is found in Docker details, search in MongoDB
+        const mongoResults = await Honeypot.find({
+            $or: [
+                { deploymentLocation: { $regex: query, $options: 'i' } },
+                { type: { $regex: query, $options: 'i' } },
+            ],
+        }).lean();
+
+        res.json(mongoResults);
+    } catch (error) {
+        res.status(500).json({ error: `Failed to retrieve honeypots: ${error}` });
+    }
+};
+
+//Get container ID
+const getContainerIDRoute = (req, res) => {
+    const { containerName } = req.query; // Extract container name from query parameter
+
+    if (!containerName) {
+        return res.status(400).json({ error: 'Container name is required' });
+    }
+
+    try {
+        // Run the docker command to get the container ID synchronously
+        const command = `docker ps -q --filter "name=${containerName}"`;
+        const containerID = execSync(command).toString().trim();
+
+        if (!containerID) {
+            return res.status(404).json({ error: `No container found with name: ${containerName}` });
+        }
+
+        res.json({ containerID }); // Send the container ID as a JSON response
+    } catch (error) {
+        res.status(500).json({ error: `Error executing Docker command: ${error.message}` }); // Handle errors
+    }
+};
+
+// Start Honeypot Endpoint
+const startHoneypotController = async (req, res) => {
     try {
         const { name } = req.params; // Expect container name
         const startStatus = await startHoneypot(name);
@@ -705,8 +820,8 @@ const listDockerHoneypots = async () => {
     }
 };
 
-    // Stop Honeypot Endpoint
-    const stopHoneypotController = async (req, res) => {
+// Stop Honeypot Endpoint
+const stopHoneypotController = async (req, res) => {
     try {
         const { name } = req.params; // Expect container name
         const stopStatus = await stopHoneypot(name);
@@ -717,6 +832,62 @@ const listDockerHoneypots = async () => {
             message: 'Error stopping honeypot',
             error: error.stack || error.message,
         });
+    }
+};
+// Ensure this is the correct directory
+const LOGS_DIR = "/home/fyp/Downloads/Honeypot_Studio-main_latest/Backend";
+
+// Keywords to filter
+const FILTER_KEYWORDS = [".exe", "exploit", "attack", "malware", "payload"];
+
+/**
+ * Reads all log files, filters logs with suspicious keywords, and returns results.
+ */
+const getFilteredLogs = () => {
+    const flaggedLogs = [];
+
+    try {
+        // Read log directory
+        const files = fs.readdirSync(LOGS_DIR);
+        console.log("Found files:", files); // Debugging
+
+        files.forEach((file) => {
+            if (file.startsWith("severity_") && file.endsWith(".txt")) {
+                const honeypotName = file.replace("severity_", "").replace(".txt", ""); // Extract honeypot name
+                const filePath = path.join(LOGS_DIR, file);
+
+                console.log(`Processing file: ${filePath}`); // Debugging
+
+                const logs = fs.readFileSync(filePath, "utf8").split("\n"); // Read logs
+
+                // Filter logs containing suspicious keywords
+                logs.forEach((log) => {
+                    if (FILTER_KEYWORDS.some((keyword) => log.toLowerCase().includes(keyword))) {
+                        flaggedLogs.push({ honeypot: honeypotName, log });
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Error reading logs:", error);
+    }
+
+    return flaggedLogs;
+};
+
+// API route to get filtered logs
+const getLogsHandler = (req, res) => {
+    try {
+        console.log("Request received at /logs"); // Debugging
+
+        const flaggedLogs = getFilteredLogs();
+        if (flaggedLogs.length === 0) {
+            return res.status(200).json({ message: "No suspicious activity detected." });
+        }
+        res.status(200).json({ flagged_logs: flaggedLogs });
+    } catch (error) {
+        console.error("Error in API handler:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
@@ -735,4 +906,6 @@ module.exports = {
     getContainerIDRoute,
     startHoneypotController,
     stopHoneypotController,
+    renameHoneypotController,
+    getLogsHandler
 };
