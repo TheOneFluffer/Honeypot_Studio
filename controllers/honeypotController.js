@@ -834,11 +834,94 @@ const stopHoneypotController = async (req, res) => {
         });
     }
 };
+
+/**
+ * Reads all log files, filters logs with suspicious keywords, and returns results.
+ */
+/*
 // Ensure this is the correct directory
 const LOGS_DIR = "/home/fyp/Downloads/Honeypot_Studio-main_latest/Backend";
 
 // Keywords to filter
-const FILTER_KEYWORDS = [".exe", "exploit", "attack", "malware", "payload"];
+const FILTER_KEYWORDS = [
+    ".exe",  // Only filter out .exe extensions, not "execute"
+    "exploit",
+    "attack",
+    "malware",
+    "payload",
+    "unrecognized",
+];
+
+/**
+ * Reads all log files, filters logs with suspicious keywords, and returns results.
+ */
+/*const getFilteredLogs = () => {
+    const flaggedLogs = [];
+
+    try {
+        // Read log directory
+        const files = fs.readdirSync(LOGS_DIR);
+        console.log("Found files:", files); // Debugging
+
+        files.forEach((file) => {
+            if (file.startsWith("severity_") && file.endsWith(".txt")) {
+                const honeypotName = file.replace("severity_", "").replace(".txt", ""); // Extract honeypot name
+                const filePath = path.join(LOGS_DIR, file);
+
+                console.log(`Processing file: ${filePath}`); // Debugging
+
+                const logs = fs.readFileSync(filePath, "utf8").split("\n"); // Read logs
+
+                // Filter logs containing suspicious keywords
+                logs.forEach((log) => {
+                    // Only match exact .exe extension, not words like "execute"
+                    if (FILTER_KEYWORDS.some((keyword) => {
+                        // Handle .exe case separately to avoid false positive with "execute"
+                        if (keyword === ".exe") {
+                            return /\b\.exe\b/.test(log.toLowerCase()); // Match exactly .exe, not execute
+                        }
+                        return log.toLowerCase().includes(keyword); // Other keywords can match anywhere
+                    })) {
+                        flaggedLogs.push({ honeypot: honeypotName, log });
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Error reading logs:", error);
+    }
+
+    return flaggedLogs;
+};
+
+// API route to get filtered logs
+const getLogsHandler = (req, res) => {
+    try {
+        console.log("Request received at /logs"); // Debugging
+
+        const flaggedLogs = getFilteredLogs();
+        if (flaggedLogs.length === 0) {
+            return res.status(200).json({ message: "No suspicious activity detected." });
+        }
+        res.status(200).json({ flagged_logs: flaggedLogs });
+    } catch (error) {
+        console.error("Error in API handler:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};*/
+
+// Ensure this is the correct directory
+const LOGS_DIR = "/home/fyp/Downloads/Honeypot_Studio-main_latest/Backend";
+
+// Extended Keywords to filter
+const FILTER_KEYWORDS = [
+    ".exe",  // Only filter out .exe files
+    "exploit",
+    "attack",
+    "malware",
+    "payload",
+    "unrecognized"  // New keyword added
+];
 
 /**
  * Reads all log files, filters logs with suspicious keywords, and returns results.
@@ -862,7 +945,14 @@ const getFilteredLogs = () => {
 
                 // Filter logs containing suspicious keywords
                 logs.forEach((log) => {
-                    if (FILTER_KEYWORDS.some((keyword) => log.toLowerCase().includes(keyword))) {
+                    // Only match exact .exe extension, not words like "execute"
+                    if (FILTER_KEYWORDS.some((keyword) => {
+                        // Handle .exe case separately to avoid false positive with "execute"
+                        if (keyword === ".exe") {
+                            return /\b\.exe\b/.test(log.toLowerCase()); // Match exactly .exe, not execute
+                        }
+                        return log.toLowerCase().includes(keyword); // Other keywords can match anywhere
+                    })) {
                         flaggedLogs.push({ honeypot: honeypotName, log });
                     }
                 });
@@ -890,6 +980,9 @@ const getLogsHandler = (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
+
 
 module.exports = {
     getHoneypots,
