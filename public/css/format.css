@@ -1,0 +1,324 @@
+@import url('https://fonts.cdnfonts.com/css/norwester');
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css");
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Norwester', sans-serif;
+}
+
+h1
+{
+    text-align: center; 
+    color: #ffffff;
+    font-family: 'Norwester', sans-serif;
+}
+
+img
+{
+    width: 350px;
+}
+
+/* Full-page layout setup */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #e1f16b;
+    background-size: cover;
+}
+
+.main-content {
+    flex: 1;
+    /* Pushes the footer to the bottom */
+}
+
+footer {
+    background-color: #343a40;
+    /* Matches Bootstrap's dark background */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.table-links {
+    margin: 20px auto;
+    width: 60%;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table-links th,
+.table-links td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.table-links a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.table-links a:hover {
+    text-decoration: underline;
+}
+
+.center-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    color: #000;
+    margin-top: 20px;
+}
+
+.log-container {
+    position: relative;
+    margin: 20px;
+}
+
+#log-textbox {
+    width: 100%;
+    height: 300px;
+}
+
+.upload-btn {
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Norwester', sans-serif;
+}
+
+.table-links {
+    margin: 20px auto;
+    width: 60%;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table-links th,
+.table-links td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.table-links a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.table-links a:hover {
+    text-decoration: underline;
+}
+
+.center-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    color: #000;
+    margin-top: 20px;
+}
+
+.container .create-post-form
+{
+    width: 100%;
+    padding: 50px;
+}
+
+.container .form-box.text
+{
+    transition: transform .18s ease;
+    transform: translateX(0);
+}
+
+.container.active .form-box.text
+{
+    transition: none;
+    transform: translateX(-400px);
+}
+
+.form-box h2
+{
+    font-size: 2em;
+    color: rgba(169, 109, 173, .5);
+    text-align: center;
+}
+
+.profile-box
+{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 3px solid rgba(169, 109, 173, .5);
+    margin: 30px 0;
+}
+
+.profile-box label
+{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 1em;
+    color: rgba(169, 109, 173);
+    font-weight: 400;
+    pointer-events: none;
+    transition: .4s;
+}
+
+.profile-box input:focus~label,
+.profile-box input:valid~label
+{
+    top: -2px;
+}
+
+.profile-box input 
+{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    color: rgba(169, 109, 173, .5);
+    font-weight: 600;
+}
+
+.profile-box .ion-icon 
+{
+    position: absolute;
+    right: 8px;
+    font-size: 1.2em;
+    color:rgba(169, 109, 173);
+    line-height: 57px;
+}*/ */
+
+/* Form container styling */
+form#honeypotForm {
+    width: 90%; /* Form width */
+    max-width: 600px; /* Maximum width for larger screens */
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center align all form elements */
+}
+
+/* Form heading */
+form#honeypotForm h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-family: 'Norwester', sans-serif;
+}
+
+/* Input and select styling */
+form#honeypotForm .text-category {
+    margin-bottom: 20px;
+}
+
+form#honeypotForm label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 16px;
+    text-align: left;
+}
+
+form#honeypotForm input[type="text"],
+form#honeypotForm input[type="number"],
+form#honeypotForm select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Buttons styling */
+form#honeypotForm button {
+    width: 48%; /* Buttons take up half the width side by side */
+    padding: 12px;
+    margin: 10px 1%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+form#honeypotForm button#createHoneypot {
+    background-color: #4CAF50;
+    color: white;
+}
+
+form#honeypotForm button[type="reset"] {
+    background-color: #f44336;
+    color: white;
+}
+
+form#honeypotForm button:hover {
+    opacity: 0.9;
+}
+
+/* Modal adjustments */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h4 {
+    color: green;
+    font-size: 20px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    form#honeypotForm {
+        width: 90%; /* Reduce form width for smaller screens */
+        padding: 20px;
+    }
+
+    form#honeypotForm button {
+        width: 100%; /* Buttons stack vertically */
+        margin: 10px 0;
+    }
+}
