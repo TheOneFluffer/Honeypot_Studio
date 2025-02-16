@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="./css/format.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>CVE Results</title>
+    <style>
+        #cve-results
+        {
+            width: 100%;
+            height: 300px;
+            font-family: monospace; /* Preserve formatting */
+            white-space: pre-wrap;  /* Keep new lines */
+            overflow-y: auto;       /* Enable scrolling */
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="logo-container">
+        <!-- <img src="./Images/Honeypot Studio.png" alt="Logo"> -->
+        <h1>Honeypot Studio</h1>
+    </div>
+
+    <!-- Centered Bold Text -->
+    <h2 class="text-center">CVE Search Results</h2>
+
+    <!-- navigation bar -->
+    <div class="navbar">
+        <ul>
+            <li>
+                <a href="home.html" style="color: black; text-decoration: underline; font-weight: bold;">Home</a>
+            </li>
+
+            <li>
+                <a href="CreateNew.html">Create</a>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <h2 class="text-center">CVE Search Results</h2>
+
+        <textarea id="cve-results" class="form-control mt-4" readonly></textarea>
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="CVEResults.js"></script>
+        <!-- <script src="/home/misa/Downloads/Honeypot_Studio-main_latest/Backend/index.js"></script> -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>

@@ -1,0 +1,134 @@
+/* Center the form in the page */
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the top */
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #e1f16b; /* Background color */
+    padding-top: 50px; /* Adds space at the top to lower the form */
+}
+
+/* Form container styling */
+form#honeypotForm {
+    width: 70%; /* Form width */
+    max-width: 900px; /* Maximum width for larger screens */
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Form heading */
+form#honeypotForm h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: cursive;
+}
+
+/* Input and select styling */
+form#honeypotForm .text-category {
+    margin-bottom: 20px;
+}
+
+form#honeypotForm .text-category h4 {
+    margin: 0 0 8px;
+    color: #555;
+    font-size: 16px;
+}
+
+form#honeypotForm input[type="text"],
+form#honeypotForm input[type="number"],
+form#honeypotForm select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Buttons styling */
+form#honeypotForm button {
+    width: 48%; /* Buttons take up half the width side by side */
+    padding: 12px 20px;
+    margin: 10px 1%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+form#honeypotForm button#createHoneypot {
+    background-color: #4CAF50;
+    color: white;
+}
+
+form#honeypotForm button[type="reset"] {
+    background-color: #f44336;
+    color: white;
+}
+
+form#honeypotForm button:hover {
+    opacity: 0.9;
+}
+
+/* Modal adjustments */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h4 {
+    color: green;
+    font-size: 20px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    form#honeypotForm {
+        width: 90%; /* Reduce form width for smaller screens */
+        padding: 20px;
+    }
+
+    form#honeypotForm button {
+        width: 100%; /* Buttons stack vertically */
+        margin: 10px 0;
+    }
+}
