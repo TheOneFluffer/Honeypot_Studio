@@ -1,0 +1,107 @@
+/* ====== Navbar Styling ====== */
+h1{
+    position: fixed; /* Ensures it stays at the top-left */
+        top: 0;
+        left: 0;
+        width: 200px; /* Adjust width as needed */
+        height: 100%; /* Full height for a sidebar */
+        background-color: #F2711C; /* Dark background for contrast */
+        padding: 0px; /* Add some padding */
+        overflow-y: auto; /* Add scroll if content exceeds the height */
+}
+.navbar {
+    position: fixed; /* Ensures it stays at the top-left */
+        top: 0;
+        left: 0;
+        width: 200px; /* Adjust width as needed */
+        height: 40%;
+    height: 40vh;
+    position: fixed; /* Makes the navbar stick to the left */
+    top: 0;
+    left: 0;
+    padding: 20px;
+}
+
+    .navbar ul {
+        list-style-type: none; /* Remove bullet points */
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar ul li {
+        margin-bottom: 10px; /* Space between items */
+    }
+
+    .navbar ul li a {
+        color: white; /* Text color */
+        text-decoration: none; /* Remove underline */
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar ul li a:hover {
+        background-color: #495057; /* Slightly lighter background on hover */
+    }
+
+    .main-content {
+        margin-left: 220px; /* Create space for the navbar */
+        padding: 20px; /* Optional padding */
+    }
+
+
+/* when hover over dropdown option */
+.navbar a:hover {
+    background-color: #ff9933; /* Lighter orange on hover */
+}
+
+.navbar .dropdown {
+    position: relative;
+}
+
+/* Hover to home button*/
+.custom-link {
+color: black;
+text-decoration: underline;
+}
+
+/* dropdown box customization */
+.navbar .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #F2711C;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.navbar .dropdown-content a {
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+.navbar .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.navbar a.active { /*to make tab for active page to be black and underlined*/
+    color: black;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* dropdown arrow for create and manage*/
+.dropdown-arrow {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+    visibility: hidden; /* Initially hidden */
+}
+
+/* dropdown arrow for create and manage*/
+.dropdown:hover .dropdown-arrow {
+    visibility: visible; /* Show the arrow on hover */
+}

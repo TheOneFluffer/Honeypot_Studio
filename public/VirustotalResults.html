@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <link rel="stylesheet" href="./css/format.css">
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>VirusTotal Results</title>
+
+</head>
+
+
+<body>
+    <h1>Honeypot Studio</h1>
+    <!-- navigation bar -->
+    <div class="navbar">
+        <ul>
+            <li>
+                <a href="home.html" style="color: black; text-decoration: underline; font-weight: bold;">Home</a>
+            </li>
+
+            <li>
+                <a href="CreateNew.html">Create</a>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Search and Action Buttons -->
+        <div class="search-bar">
+        </div>
+        <div class="log-container">
+            <h2>
+                VirusTotal Results:
+            </h2>
+            <label for="log-textbox" class="form-label"><strong>Honeypot Name: <span id="honeypot-name"
+                        style="color: #007bff;">Loading...</span></strong></label>
+            <textarea id="log-textbox" placeholder="Results will appear here..." readonly></textarea>
+        </div>
+    </div>
+
+    <!-- <button class="btn btn-warning btn-sm" onclick="ViewLog('${honeypot.name}')">Reload</button> -->
+    <button class="btn btn-secondary btn-sm" onclick="navigateToManageEdit()">Back</button>
+
+    <script>
+        // Retrieve and display honeypotName
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const honeypotName = getQueryParam("honeypotName");
+        if (honeypotName) {
+            document.getElementById("honeypot-name").textContent = honeypotName;
+        } else {
+            console.error("Honeypot name is missing.");
+        }
+
+        function navigateToManageEdit(honeypotName) {
+            // Navigate to ManageEdit.html with the honeypot name as a query parameter
+            const url = `ManageEdit.html`;
+            window.location.href = url;
+        }
+    </script>
+
+    <!-- Show logs from honeypot -->
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="VirustotalResults.js"></script>
+    <script src="../../Backend/controllers/honeypotController.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/format.css">
+
+    <style>
+        .table-links {
+            margin: 20px auto;
+            width: 80%;
+            text-align: center;
+            border: 3px solid #ddd;
+        }
+
+        .table-links th,
+        .table-links td {
+            padding: 10px;
+            border: 20px solid #ddd;
+        }
+
+        .table-links a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .table-links a:hover {
+            text-decoration: underline;
+        }
+
+        .center-text {
+            text-align: center;
+            font-weight: bold;
+            font-size: 36px;
+            color: #000;
+            margin: 40px;
+        }
+    </style>
+
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="format.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>Details</title>
+</head>
+
+<body>
+    <h1>Honeypot Studio</h1>
+
+    <!-- navigation bar -->
+    <div class="navbar">
+        <ul>
+            <li>
+                <a href="home.html" style="color: black; text-decoration: underline; font-weight: bold;">Home</a>
+            </li>
+            
+            <li>
+                <a href="CreateNew.html">Create</a>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Search and Action Buttons -->
+        <div class="search-bar">
+        </div>
+
+        <!-- List Container -->
+    <div class="container my-5" id="honeypot-list">
+        <h2 class="text-center mb-4">Manage Your Honeypots</h2>
+        <!-- List of Honeypots will be populated here by JavaScript -->
+    </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script>
+        document.getElementById("search-button").addEventListener("click", async () => {
+            const query = document.getElementById("search-input").value.trim();
+    
+            if (!query) {
+                alert("Please enter a search query.");
+                return;
+            }
+    
+            try {
+                // Fetch honeypots matching the query
+                const response = await fetch(`http://localhost:5000/api/honeypots/search?query=${encodeURIComponent(query)}`);
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch honeypots.");
+                }
+    
+                const results = await response.json();
+                displayResults(results);
+            } catch (error) {
+                console.error("Error fetching honeypots:", error);
+                alert("An error occurred while searching for honeypots.");
+            }
+        });
+    </script>
+    <script src="hpDetails.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<!-- Footer -->
+<footer>
+    <p>All rights reserved @Grp 4 2024</p>
+</footer>
+
+</html>

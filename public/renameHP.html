@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/format.css">
+
+    <meta name="author" content="HoneypotStudio">
+    <link rel="stylesheet" href="format.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="navstyles.css">
+    <script src="script(navbar).js"></script> <!-- navbar script -->
+    <script src="homescript.js"></script>
+    <script src="script.js"></script>
+    <title>Rename Honeypot</title>
+
+    <style>
+        /* Centering the form */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            background-color: #e1f16b;
+        }
+
+        .rename-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 950px;
+            text-align: center;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        .text-category {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Centering buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Honeypot Studio</h1>
+    <div class="navbar">
+        <ul>
+            <li>
+                <a href="home.html" style="color: black; text-decoration: underline; font-weight: bold;">Home</a>
+            </li>
+            
+            <li>
+                <a href="CreateNew.html">Create</a>
+            </li>
+
+            <li class="dropdown">
+                <a href="#">Manage <span class="dropdown-arrow">▼</span></a>
+                <ul class="dropdown-content">
+                    <li><a href="ManageEdit.html">Edit</a></li>
+                    <li><a href="ManageRemediate.html">Remediate</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="rename-container">
+        <h3>Change Honeypot Name</h3>
+
+        <form id="honeypotForm">
+            <!-- Honeypot Name -->
+            <div class="text-category">
+                <label for="newname">New Name</label>
+                <input type="text" id="newname" name="newname" placeholder="Enter new name here:">
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" id="renameHoneypot" class="btn btn-primary btn-sm">Rename</button>
+                <button type="reset" class="btn btn-warning btn-sm">Clear</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="navigateTohpDetails()">Back</button>
+            </div>
+        </form>
+
+        <div id="statusModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p id="statusMessage"></p>
+            </div>
+        </div>
+    </div>
+    <script src="renameHP.js"></script>
+</body>
+
+</html>
