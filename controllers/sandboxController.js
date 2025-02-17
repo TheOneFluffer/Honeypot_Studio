@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const FormData = require('form-data');
-const { VIRUSTOTAL_API_KEY, VIRUSTOTAL_API_URL, TRIAGE_API_KEY, TRIAGE_API_URL} = require('../config/sandboxConfig');
+const { VIRUSTOTAL_API_KEY, VIRUSTOTAL_API_URL} = require('../config/sandboxConfig');
 
 // Function to fetch logs from an existing collection
 const getLogsFromCollection = async (collectionName) => {
